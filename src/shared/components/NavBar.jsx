@@ -78,6 +78,12 @@ const NavBar = () => {
               onClose={handleClose}
             >
               <MenuItem onClick={handleClose}>
+                <Link to="/profile" className={classes.link}>
+                  โปรไฟล์
+                </Link>
+              </MenuItem>
+
+              <MenuItem onClick={handleClose}>
                 <Link to="/lending/request" className={classes.link}>
                   ขอยืมพลังงาน
                 </Link>

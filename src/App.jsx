@@ -6,6 +6,7 @@ import { Login } from "./Login";
 import { Register } from "./Register";
 import { LendingFeed } from "./LendingFeed";
 import { LendingRequest } from "./LendingRequest";
+import { Profile } from "./Profile";
 
 const App = () => {
   return (
@@ -17,6 +18,8 @@ const App = () => {
       <AppLayoutRoute>
         <Switch>
           <Route exact path="/" component={LendingFeed} />
+
+          <Route path="/profile" component={Profile} />
 
           <Route path="/lending/request" component={LendingRequest} />
         </Switch>
