@@ -47,8 +47,14 @@ const NavBar = () => {
     <div className={classes.root}>
       <AppBar position="static" className={classes.appBar}>
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            Smart Energy Platform
+          <img
+            style={{ width: "50px", margin: "8px" }}
+            src="/images/SRAN_LOGO.png"
+            alt="logo"
+          />
+
+          <Typography variant="body1" className={classes.title}>
+            SRAN Smart Energy Platform
           </Typography>
 
           <div>

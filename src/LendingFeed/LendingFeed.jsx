@@ -5,50 +5,77 @@ import TextField from "@material-ui/core/TextField";
 import { LendingCard } from "./components/LendingCard";
 
 import { useStyles } from "./lendingFeed.styles";
+import { useEffect, useState } from "react";
+
+import getAllLendingRequest from "./apis/getAllLedingRequest";
+import handlePromise from "shared/handlePromise";
 
 const LendingFeed = () => {
   const classes = useStyles();
+  const [allLending, setAllLending] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAllLending();
+  }, []);
+
+  const fetchAllLending = async () => {
+    const [allLending, error] = await handlePromise(getAllLendingRequest());
+
+    if (error) {
+      console.log(error);
+    }
+
+    setAllLending(allLending.data.response);
+
+    return setIsLoading(false);
+  };
 
   return (
     <>
-      <div className={classes.heroContent}>
-        <Container maxWidth="sm">
-          <img src="/images/Logo.png" alt="logo" />
+      {isLoading ? (
+        <h1>loading...</h1>
+      ) : (
+        <>
+          <div className={classes.heroContent}>
+            <Container maxWidth="sm">
+              <img src="/images/Logo.png" alt="logo" />
 
-          <Typography
-            component="h1"
-            variant="h4"
-            align="center"
-            color="textPrimary"
-            gutterBottom
-          >
-            Energy Lending Platform
-          </Typography>
+              <Typography
+                component="h1"
+                variant="h4"
+                align="center"
+                color="textPrimary"
+                gutterBottom
+              >
+                Energy Lending Platform
+              </Typography>
 
-          <div className={classes.search}>
-            <TextField
-              size="medium"
-              id="outlined-search"
-              label="Search field"
-              type="search"
-              variant="outlined"
-              fullWidth
-            />
+              <div className={classes.search}>
+                <TextField
+                  size="medium"
+                  id="outlined-search"
+                  label="Search field"
+                  type="search"
+                  variant="outlined"
+                  fullWidth
+                />
+              </div>
+            </Container>
           </div>
-        </Container>
-      </div>
-
-      <div className={classes.content}>
-        <Container maxWidth="md">
-          <Grid container spacing={4}>
-            {new Array(10).fill(0).map((card) => (
-              <Grid key={card} item xs={12} sm={6} md={4}>
-                <LendingCard />
+          <div className={classes.content}>
+            <Container maxWidth="md">
+              <Grid container spacing={4}>
+                {allLending.map(({ Record }, index) => (
+                  <Grid key={index} item xs={12} sm={6} md={4}>
+                    <LendingCard record={Record} />
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </div>
+            </Container>
+          </div>{" "}
+        </>
+      )}
     </>
   );
 };

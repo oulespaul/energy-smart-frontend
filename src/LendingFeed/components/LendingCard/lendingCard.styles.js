@@ -15,4 +15,7 @@ export const useStyles = makeStyles(() => ({
   cardActions: {
     justifyContent: "end",
   },
+  contentMargin: {
+    marginTop: "8px",
+  },
 }));
