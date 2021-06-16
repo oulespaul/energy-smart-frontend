@@ -89,12 +89,6 @@ const NavBar = () => {
                 </Link>
               </MenuItem>
 
-              <MenuItem onClick={handleClose}>
-                <Link to="/lending/request" className={classes.link}>
-                  ขอยืมพลังงาน
-                </Link>
-              </MenuItem>
-
               <MenuItem onClick={handleClose}>ประวัติ</MenuItem>
             </Menu>
           </div>

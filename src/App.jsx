@@ -21,7 +21,7 @@ const App = () => {
 
           <Route path="/profile" component={Profile} />
 
-          <Route path="/lending/request" component={LendingRequest} />
+          <Route path="/lending/request/:plantId" component={LendingRequest} />
         </Switch>
       </AppLayoutRoute>
     </Switch>

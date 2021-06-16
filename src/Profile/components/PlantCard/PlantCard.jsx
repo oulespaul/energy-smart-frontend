@@ -7,6 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Autorenew from "@material-ui/icons/Autorenew";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   cardMedia: {
@@ -16,6 +17,13 @@ const useStyles = makeStyles(() => ({
     height: "100%",
     display: "flex",
     flexDirection: "column",
+  },
+  requestButton: {
+    color: "#9abba8",
+  },
+  link: {
+    textDecorator: "none",
+    color: "inherit",
   },
 }));
 
@@ -40,8 +48,14 @@ const PlantCard = (props) => {
             ความจุไฟฟ้า: {plant.volume_balance}
           </Typography>
 
-          <IconButton variant="contained" size="small" color="primary">
-            <Autorenew />
+          <IconButton
+            variant="contained"
+            size="small"
+            className={classes.requestButton}
+          >
+            <Link className={classes.link} to={`/lending/request/${plant.id}`}>
+              <Autorenew />
+            </Link>
           </IconButton>
         </Grid>
       </CardContent>
