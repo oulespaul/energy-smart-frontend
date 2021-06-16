@@ -20,7 +20,7 @@ const PlantDetailCard = () => {
   return (
     <Card className={classes.card}>
       <CardContent>
-        <Typography variant="h5">Lorem ipsum dolor sit amet.</Typography>
+        <Typography variant="h5">ชื่อโรงไฟฟ้าที่ต้องการทำการยืม</Typography>
 
         <Typography>
           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro,

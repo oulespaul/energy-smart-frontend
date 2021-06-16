@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
@@ -12,13 +12,34 @@ import Add from "@material-ui/icons/Add";
 import { PlantCard } from "./components/PlantCard";
 import { RequestLendingCard } from "./components/RequestLendingCard";
 import { FormDialog } from "./components/FormDialog";
+import Loading from "shared/components/Loading";
 
 import { useStyles } from "./profile.styles";
 import { Grid } from "@material-ui/core";
+import handlePromise from "shared/handlePromise";
+import getPlants from "./apis/getPlants";
 
 const Profile = () => {
   const classes = useStyles();
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [plants, setPlants] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPlantInUser();
+  }, []);
+
+  const fetchPlantInUser = async () => {
+    const [plantsInUser, error] = await handlePromise(getPlants());
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    setIsLoading(false);
+    setPlants(plantsInUser.data);
+  };
 
   const handleFormOpen = () => {
     setIsFormOpen(true);
@@ -30,48 +51,54 @@ const Profile = () => {
 
   return (
     <>
-      <div className={classes.heroSection}>
-        <Container maxWidth="md">
-          <Grid container justify="space-between">
-            <Typography variant="h5">โรงพลังงานไฟฟ้า</Typography>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className={classes.heroSection}>
+            <Container maxWidth="md">
+              <Grid container justify="space-between">
+                <Typography variant="h5">โรงพลังงานไฟฟ้า</Typography>
 
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<Add />}
-              onClick={handleFormOpen}
-            >
-              เพิ่มโรงงาน
-            </Button>
-          </Grid>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<Add />}
+                  onClick={handleFormOpen}
+                >
+                  เพิ่มโรงงาน
+                </Button>
+              </Grid>
 
-          <Card className={classes.heroCard}>
-            <CardContent>
-              <GridList className={classes.gridList} cols={3} spacing={24}>
-                {new Array(4).fill(0).map((tile, index) => (
-                  <GridListTile key={index}>
-                    <PlantCard />
-                  </GridListTile>
+              <Card className={classes.heroCard}>
+                <CardContent>
+                  <GridList className={classes.gridList} cols={3} spacing={24}>
+                    {plants.map((plant, index) => (
+                      <GridListTile style={{ height: 220 }} key={index}>
+                        <PlantCard plant={plant} />
+                      </GridListTile>
+                    ))}
+                  </GridList>
+                </CardContent>
+              </Card>
+            </Container>
+          </div>
+
+          <div className={classes.listSection}>
+            <Container maxWidth="lg">
+              <Typography variant="h5">รายการขอเช่าพลังงาน</Typography>
+
+              <Paper className={classes.paper}>
+                {new Array(10).fill(0).map((card, index) => (
+                  <RequestLendingCard key={index} />
                 ))}
-              </GridList>
-            </CardContent>
-          </Card>
-        </Container>
-      </div>
+              </Paper>
+            </Container>
+          </div>
 
-      <div className={classes.listSection}>
-        <Container maxWidth="lg">
-          <Typography variant="h5">รายการขอเช่าพลังงาน</Typography>
-
-          <Paper className={classes.paper}>
-            {new Array(10).fill(0).map((card, index) => (
-              <RequestLendingCard key={index} />
-            ))}
-          </Paper>
-        </Container>
-      </div>
-
-      <FormDialog isOpen={isFormOpen} handleClose={handleClose} />
+          <FormDialog isOpen={isFormOpen} handleClose={handleClose} />
+        </>
+      )}
     </>
   );
 };
