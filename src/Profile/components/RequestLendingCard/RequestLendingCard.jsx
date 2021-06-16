@@ -27,9 +27,7 @@ const RequestLendingCard = () => {
   return (
     <Card className={classes.card}>
       <CardContent>
-        <Typography variant="h5" align="start">
-          โรงพลังงานไฟฟ้า
-        </Typography>
+        <Typography variant="h5">โรงพลังงานไฟฟ้า</Typography>
 
         <Typography>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum iste
