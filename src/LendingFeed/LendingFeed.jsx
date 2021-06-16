@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 
 import getAllLendingRequest from "./apis/getAllLedingRequest";
 import handlePromise from "shared/handlePromise";
+import Loading from "shared/components/Loading";
 
 const LendingFeed = () => {
   const classes = useStyles();
@@ -23,7 +24,7 @@ const LendingFeed = () => {
     const [allLending, error] = await handlePromise(getAllLendingRequest());
 
     if (error) {
-      console.log(error);
+      return;
     }
 
     setAllLending(allLending.data.response);
@@ -34,7 +35,7 @@ const LendingFeed = () => {
   return (
     <>
       {isLoading ? (
-        <h1>loading...</h1>
+        <Loading />
       ) : (
         <>
           <div className={classes.heroContent}>
