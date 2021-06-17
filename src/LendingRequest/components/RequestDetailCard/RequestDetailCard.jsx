@@ -38,16 +38,19 @@ export const useStyles = makeStyles(() => ({
   },
 }));
 
-const RequestDetailCard = () => {
+const RequestDetailCard = (props) => {
   const classes = useStyles();
+  const { handleValue, handleSubmit } = props;
   const [value, setValue] = useState(30);
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
+    handleValue(value);
   };
 
   const handleInputChange = (event) => {
     setValue(event.target.value === "" ? "" : Number(event.target.value));
+    handleValue(value);
   };
 
   return (
@@ -94,7 +97,11 @@ const RequestDetailCard = () => {
       </CardContent>
 
       <CardActions className={classes.cardActions}>
-        <Button variant="contained" className={classes.requestSubmit}>
+        <Button
+          variant="contained"
+          className={classes.requestSubmit}
+          onClick={handleSubmit}
+        >
           ส่งคำร้องขอ
         </Button>
       </CardActions>

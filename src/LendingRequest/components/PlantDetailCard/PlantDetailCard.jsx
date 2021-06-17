@@ -1,6 +1,7 @@
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -15,18 +16,25 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const PlantDetailCard = () => {
+const PlantDetailCard = (props) => {
   const classes = useStyles();
+  const { plant } = props;
+
   return (
     <Card className={classes.card}>
       <CardContent>
-        <Typography variant="h5">ชื่อโรงไฟฟ้าที่ต้องการทำการยืม</Typography>
+        <Typography variant="h5" gutterBottom>
+          ชื่อโรงไฟฟ้าที่ต้องการทำการยืม: {plant.name}
+        </Typography>
 
-        <Typography>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro,
-          maiores. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          Omnis dicta dolore fugit architecto iure. Ex iste consequatur dolore
-          quibusdam veritatis.
+        <Divider />
+
+        <Typography style={{ marginTop: 8 }} variant="body1">
+          ที่ตั้งโรงไฟฟ้า: {plant.address}
+        </Typography>
+
+        <Typography variant="body1">
+          ความจุโรงไฟฟ้า: {plant.volume_balance}
         </Typography>
       </CardContent>
     </Card>
