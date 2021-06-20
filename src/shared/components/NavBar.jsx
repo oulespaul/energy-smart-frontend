@@ -1,6 +1,8 @@
 import { useState } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { Link, useHistory } from "react-router-dom";
+
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -8,7 +10,8 @@ import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import { Link } from "react-router-dom";
+
+import AuthService from "shared/services/authService";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 const NavBar = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const history = useHistory();
   const open = Boolean(anchorEl);
 
   const handleMenu = (event) => {
@@ -41,6 +45,12 @@ const NavBar = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSignOut = () => {
+    AuthService.signOut();
+
+    return history.push("/login");
   };
 
   return (
@@ -84,12 +94,14 @@ const NavBar = () => {
               onClose={handleClose}
             >
               <MenuItem onClick={handleClose}>
-                <Link to="/profile" className={classes.link}>
+                <Link to="/app/profile" className={classes.link}>
                   โปรไฟล์
                 </Link>
               </MenuItem>
 
               <MenuItem onClick={handleClose}>ประวัติ</MenuItem>
+
+              <MenuItem onClick={handleSignOut}>ออกจากระบบ</MenuItem>
             </Menu>
           </div>
         </Toolbar>

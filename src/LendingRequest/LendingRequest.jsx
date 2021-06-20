@@ -18,7 +18,7 @@ const LendingRequest = () => {
   const [plant, setPlant] = useState({});
   const [volume, setVolume] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const { plantId } = useParams();
+  const { param1: plantId } = useParams();
 
   useEffect(() => {
     fetchPlantById();
@@ -46,7 +46,7 @@ const LendingRequest = () => {
       return;
     }
 
-    alert("success");
+    alert("success", requestLending.data);
   };
 
   return isLoading ? (

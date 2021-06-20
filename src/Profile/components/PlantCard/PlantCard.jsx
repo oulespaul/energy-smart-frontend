@@ -53,7 +53,7 @@ const PlantCard = (props) => {
             size="small"
             className={classes.requestButton}
           >
-            <Link className={classes.link} to={`/lending/request/${plant.id}`}>
+            <Link className={classes.link} to={`/app/lending-request/${plant.id}`}>
               <Autorenew />
             </Link>
           </IconButton>

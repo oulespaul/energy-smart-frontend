@@ -8,14 +8,46 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 import { useStyles } from "./login.styles";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
+
+import AuthService from "shared/services/authService";
+import handlePromise from "shared/handlePromise";
 
 function SignInSide() {
   const classes = useStyles();
+  const history = useHistory();
+  const initCredential = {
+    username: "",
+    password: "",
+  };
+  const [credentials, setCredential] = useState(initCredential);
+
+  const handleFormChange = (event) => {
+    setCredential({
+      ...credentials,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const submitLogin = async (event) => {
+    event.preventDefault();
+
+    const [, error] = await handlePromise(AuthService.signIn(credentials));
+
+    if (error) {
+      return alert(error);
+    }
+    console.log("change route");
+    return history.push("/app/feed");
+  };
 
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
+
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
+
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography component="h1" variant="h2">
@@ -31,7 +63,9 @@ function SignInSide() {
               id="username"
               label="Username"
               name="username"
+              value={credentials.username}
               autoComplete="username"
+              onChange={handleFormChange}
               autoFocus
             />
 
@@ -41,10 +75,12 @@ function SignInSide() {
               required
               fullWidth
               name="password"
+              value={credentials.password}
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={handleFormChange}
             />
 
             <Button
@@ -53,6 +89,7 @@ function SignInSide() {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={submitLogin}
             >
               เข้าสู่ระบบ
             </Button>

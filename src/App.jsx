@@ -1,4 +1,4 @@
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import { AppLayoutRoute } from "./Layouts";
 
@@ -8,6 +8,8 @@ import { LendingFeed } from "./LendingFeed";
 import { LendingRequest } from "./LendingRequest";
 import { Profile } from "./Profile";
 
+import ProtectedRoute from "shared/components/ProtectedRoute";
+
 const App = () => {
   return (
     <Switch>
@@ -15,15 +17,22 @@ const App = () => {
 
       <Route path="/login" component={Login} />
 
-      <AppLayoutRoute>
-        <Switch>
-          <Route exact path="/" component={LendingFeed} />
+      <Route path="/app/:path?/:param1?" exact>
+        <AppLayoutRoute>
+          <Switch>
+            <ProtectedRoute exact path="/app/feed" component={LendingFeed} />
 
-          <Route path="/profile" component={Profile} />
+            <ProtectedRoute path="/app/profile" component={Profile} />
 
-          <Route path="/lending/request/:plantId" component={LendingRequest} />
-        </Switch>
-      </AppLayoutRoute>
+            <ProtectedRoute
+              path="/app/lending-request/:plantId"
+              component={LendingRequest}
+            />
+          </Switch>
+        </AppLayoutRoute>
+      </Route>
+
+      <Redirect to="/app/feed" />
     </Switch>
   );
 };
