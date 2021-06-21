@@ -10,30 +10,34 @@ import { Profile } from "./Profile";
 
 import ProtectedRoute from "shared/components/ProtectedRoute";
 
+import { AlertProvider } from "shared/context/alertContext";
+
 const App = () => {
   return (
-    <Switch>
-      <Route path="/register" component={Register} />
+    <AlertProvider>
+      <Switch>
+        <Route path="/register" component={Register} />
 
-      <Route path="/login" component={Login} />
+        <Route path="/login" component={Login} />
 
-      <Route path="/app/:path?/:param1?" exact>
-        <AppLayoutRoute>
-          <Switch>
-            <ProtectedRoute exact path="/app/feed" component={LendingFeed} />
+        <Route path="/app/:path?/:param1?" exact>
+          <AppLayoutRoute>
+            <Switch>
+              <ProtectedRoute exact path="/app/feed" component={LendingFeed} />
 
-            <ProtectedRoute path="/app/profile" component={Profile} />
+              <ProtectedRoute path="/app/profile" component={Profile} />
 
-            <ProtectedRoute
-              path="/app/lending-request/:plantId"
-              component={LendingRequest}
-            />
-          </Switch>
-        </AppLayoutRoute>
-      </Route>
+              <ProtectedRoute
+                path="/app/lending-request/:plantId"
+                component={LendingRequest}
+              />
+            </Switch>
+          </AppLayoutRoute>
+        </Route>
 
-      <Redirect to="/app/feed" />
-    </Switch>
+        <Redirect to="/app/feed" />
+      </Switch>
+    </AlertProvider>
   );
 };
 

@@ -38,7 +38,7 @@ function SignInSide() {
     if (error) {
       return alert(error);
     }
-    console.log("change route");
+
     return history.push("/app/feed");
   };
 

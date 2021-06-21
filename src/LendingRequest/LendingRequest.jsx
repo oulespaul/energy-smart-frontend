@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { AlertType, useAlert } from "shared/context/alertContext";
+
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Image from "material-ui-image";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router";
 import Loading from "shared/components/Loading";
 import handlePromise from "shared/handlePromise";
 import getPlantById from "./apis/getPlantById";
@@ -12,6 +14,7 @@ import { PlantDetailCard } from "./components/PlantDetailCard";
 import { RequestDetailCard } from "./components/RequestDetailCard";
 
 import { useStyles } from "./lendingRequest.styles";
+import { useHistory } from "react-router-dom";
 
 const LendingRequest = () => {
   const classes = useStyles();
@@ -19,6 +22,8 @@ const LendingRequest = () => {
   const [volume, setVolume] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const { param1: plantId } = useParams();
+  const { dispatch } = useAlert();
+  const history = useHistory();
 
   useEffect(() => {
     fetchPlantById();
@@ -29,7 +34,10 @@ const LendingRequest = () => {
     const [plant, error] = await handlePromise(getPlantById(plantId));
 
     if (error) {
-      return;
+      return dispatch({
+        type: AlertType.ERROR,
+        payload: { message: "การดึงข้อมูลโรงงานมีปัญหา" },
+      });
     }
 
     setPlant(plant.data);
@@ -37,16 +45,22 @@ const LendingRequest = () => {
   };
 
   const handleSubmit = async () => {
-    const [requestLending, error] = await handlePromise(
+    const [, error] = await handlePromise(
       postCreateLendingRequest(plant, volume)
     );
 
     if (error) {
-      alert(error);
-      return;
+      return dispatch({
+        type: AlertType.ERROR,
+        payload: { message: "สร้างรายการไม่สำเร็จ" },
+      });
     }
 
-    alert("success", requestLending.data);
+    dispatch({
+      type: AlertType.SUCCESS,
+      payload: { message: "สร้างรายการสำเร็จ" },
+    });
+    return history.goBack();
   };
 
   return isLoading ? (

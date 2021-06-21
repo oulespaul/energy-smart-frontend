@@ -18,23 +18,28 @@ import { useStyles } from "./profile.styles";
 import { Grid } from "@material-ui/core";
 import handlePromise from "shared/handlePromise";
 import getPlants from "./apis/getPlants";
+import { AlertType, useAlert } from "shared/context/alertContext";
 
 const Profile = () => {
   const classes = useStyles();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [plants, setPlants] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { dispatch } = useAlert();
 
   useEffect(() => {
     fetchPlantInUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchPlantInUser = async () => {
     const [plantsInUser, error] = await handlePromise(getPlants());
 
     if (error) {
-      console.log(error);
-      return;
+      return dispatch({
+        type: AlertType.ERROR,
+        payload: { message: "การดึงข้อมูลโรงงานมีปัญหา" },
+      });
     }
 
     setIsLoading(false);

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AlertType, useAlert } from "shared/context/alertContext";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -18,6 +19,7 @@ export default function FormDialog(props) {
     volumeBalance: 0,
   };
   const [plant, setPlant] = useState(initPlant);
+  const { dispatch } = useAlert();
 
   const handleOnChange = (event) => {
     const { name, value } = event.target;
@@ -28,13 +30,20 @@ export default function FormDialog(props) {
   };
 
   const handleSubmit = async () => {
-    const [createPlant, error] = await handlePromise(postCreatePlant(plant));
-    console.log(createPlant);
+    const [, error] = await handlePromise(postCreatePlant(plant));
+
     if (error) {
-      console.log(error);
+      dispatch({
+        type: AlertType.ERROR,
+        payload: { message: "สร้างโรงงานไฟฟ้าไม่สำเร็จ" },
+      });
       return setPlant(initPlant);
     }
 
+    dispatch({
+      type: AlertType.SUCCESS,
+      payload: { message: "สร้างโรงไฟฟ้าสำเร็จ" },
+    });
     return handleClear();
   };
 
