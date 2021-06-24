@@ -27,7 +27,12 @@ const LendingFeed = () => {
       return;
     }
 
-    setAllLending(allLending.data.response);
+    const lendRequesting = allLending.data.response.filter(
+      ({ Record }) =>
+        Record.status === "lendRequesting" || Record.status === "lendOffering"
+    );
+
+    setAllLending(lendRequesting);
 
     return setIsLoading(false);
   };

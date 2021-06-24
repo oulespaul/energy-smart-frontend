@@ -18,17 +18,20 @@ import { useStyles } from "./profile.styles";
 import { Grid } from "@material-ui/core";
 import handlePromise from "shared/handlePromise";
 import getPlants from "./apis/getPlants";
+import getAllLendingRequest from "LendingFeed/apis/getAllLedingRequest";
 import { AlertType, useAlert } from "shared/context/alertContext";
 
 const Profile = () => {
   const classes = useStyles();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [plants, setPlants] = useState([]);
+  const [lending, setLending] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { dispatch } = useAlert();
 
   useEffect(() => {
     fetchPlantInUser();
+    fetchAllLending();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -42,8 +45,26 @@ const Profile = () => {
       });
     }
 
-    setIsLoading(false);
     setPlants(plantsInUser.data);
+  };
+
+  const fetchAllLending = async () => {
+    const [allLending, error] = await handlePromise(getAllLendingRequest());
+
+    if (error) {
+      return dispatch({
+        type: AlertType.ERROR,
+        payload: { message: "การดึงข้อมูลรายการขอยืมพลังงานมีปัญหา" },
+      });
+    }
+
+    const lendRequesting = allLending.data.response.filter(
+      ({ Record }) =>
+        Record.status === "lendRequesting" || Record.status === "lendOffering"
+    );
+
+    setLending(lendRequesting);
+    return setIsLoading(false);
   };
 
   const handleFormOpen = () => {
@@ -94,8 +115,8 @@ const Profile = () => {
               <Typography variant="h5">รายการขอเช่าพลังงาน</Typography>
 
               <Paper className={classes.paper}>
-                {new Array(10).fill(0).map((card, index) => (
-                  <RequestLendingCard key={index} />
+                {lending.map(({ Record }, index) => (
+                  <RequestLendingCard lending={Record} key={index} />
                 ))}
               </Paper>
             </Container>

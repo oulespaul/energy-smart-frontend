@@ -7,6 +7,7 @@ import { Register } from "./Register";
 import { LendingFeed } from "./LendingFeed";
 import { LendingRequest } from "./LendingRequest";
 import { Profile } from "./Profile";
+import { LendingOffer } from "./LendingOffer";
 
 import ProtectedRoute from "shared/components/ProtectedRoute";
 
@@ -30,6 +31,11 @@ const App = () => {
               <ProtectedRoute
                 path="/app/lending-request/:plantId"
                 component={LendingRequest}
+              />
+
+              <ProtectedRoute
+                path="/app/lending-offer/:lendingId"
+                component={LendingOffer}
               />
             </Switch>
           </AppLayoutRoute>
