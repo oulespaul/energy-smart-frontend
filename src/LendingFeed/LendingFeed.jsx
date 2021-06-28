@@ -10,11 +10,14 @@ import { useEffect, useState } from "react";
 import getAllLendingRequest from "./apis/getAllLedingRequest";
 import handlePromise from "shared/handlePromise";
 import Loading from "shared/components/Loading";
+import _ from "lodash";
 
 const LendingFeed = () => {
   const classes = useStyles();
   const [allLending, setAllLending] = useState([]);
+  const [lendings, setLendings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchAllLending();
@@ -33,9 +36,29 @@ const LendingFeed = () => {
     );
 
     setAllLending(lendRequesting);
+    setLendings(lendRequesting);
 
     return setIsLoading(false);
   };
+
+  const handleSearch = (event) => {
+    const { value } = event.target;
+
+    setSearch(value);
+    debounce(value);
+  };
+
+  const debounce = _.debounce((value) => {
+    if (value === "") {
+      return setLendings(allLending);
+    }
+
+    const lendingSearching = allLending.filter((lending) =>
+      lending.Record.request_plant_id.includes(value)
+    );
+
+    return setLendings(lendingSearching);
+  }, 2000);
 
   return (
     <>
@@ -61,9 +84,11 @@ const LendingFeed = () => {
                 <TextField
                   size="medium"
                   id="outlined-search"
-                  label="Search field"
+                  label="ค้นหาโรงงาน"
                   type="search"
                   variant="outlined"
+                  value={search}
+                  onChange={handleSearch}
                   fullWidth
                 />
               </div>
@@ -72,7 +97,7 @@ const LendingFeed = () => {
           <div className={classes.content}>
             <Container maxWidth="md">
               <Grid container spacing={4}>
-                {allLending.map(({ Record, imageUrl }, index) => (
+                {lendings.map(({ Record, imageUrl }, index) => (
                   <Grid key={index} item xs={12} sm={6} md={4}>
                     <LendingCard record={{ ...Record, imageUrl }} />
                   </Grid>
