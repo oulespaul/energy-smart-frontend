@@ -8,10 +8,18 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import Grid from "@material-ui/core/Grid";
+
 import handlePromise from "shared/handlePromise";
 import postCreatePlant from "Profile/apis/postCreatePlant";
+import postUploadPlantImage from "Profile/apis/postUploadPlantImage";
+
+import Fab from "@material-ui/core/Fab";
+import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import { useStyles } from "./formDialog.styles";
 
 export default function FormDialog(props) {
+  const classes = useStyles();
   const { isOpen, handleClose } = props;
   const initPlant = {
     name: "",
@@ -19,6 +27,7 @@ export default function FormDialog(props) {
     volumeBalance: 0,
   };
   const [plant, setPlant] = useState(initPlant);
+  const [plantImage, setPlantImage] = useState({ file: 0, imageUrl: "" });
   const { dispatch } = useAlert();
 
   const handleOnChange = (event) => {
@@ -30,12 +39,23 @@ export default function FormDialog(props) {
   };
 
   const handleSubmit = async () => {
-    const [, error] = await handlePromise(postCreatePlant(plant));
-
+    const [plantRes, error] = await handlePromise(postCreatePlant(plant));
     if (error) {
       dispatch({
         type: AlertType.ERROR,
         payload: { message: "สร้างโรงงานไฟฟ้าไม่สำเร็จ" },
+      });
+      return setPlant(initPlant);
+    }
+
+    const [, uploadError] = await handlePromise(
+      postUploadPlantImage(plantRes.data.id, plantImage.file)
+    );
+
+    if (uploadError) {
+      dispatch({
+        type: AlertType.ERROR,
+        payload: { message: "อัพโหลดรูปภาพโรงงานไฟฟ้าไม่สำเร็จ" },
       });
       return setPlant(initPlant);
     }
@@ -52,6 +72,20 @@ export default function FormDialog(props) {
     return setPlant(initPlant);
   };
 
+  const handleUploadClick = (event) => {
+    var file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.readAsBinaryString(file);
+
+    reader.onload = () => {
+      setPlantImage({
+        file,
+        imageUrl: `data:${file.type};base64,${btoa(reader.result)}`,
+      });
+    };
+  };
+
   return (
     <div>
       <Dialog
@@ -62,6 +96,33 @@ export default function FormDialog(props) {
         <DialogTitle id="form-dialog-title">เพิ่มโรงงานไฟฟ้า</DialogTitle>
 
         <DialogContent>
+          {plantImage.imageUrl ? (
+            <Grid container justify="center">
+              <img
+                width="100%"
+                className={classes.media}
+                alt="plant"
+                src={plantImage.imageUrl}
+              />
+            </Grid>
+          ) : (
+            <>
+              <input
+                accept="image/*"
+                className={classes.input}
+                id="contained-button-file"
+                multiple
+                type="file"
+                onChange={handleUploadClick}
+              />
+              <label htmlFor="contained-button-file">
+                <Fab component="span" className={classes.button}>
+                  <AddPhotoAlternateIcon />
+                </Fab>
+              </label>
+            </>
+          )}
+
           <TextField
             autoFocus
             margin="dense"
