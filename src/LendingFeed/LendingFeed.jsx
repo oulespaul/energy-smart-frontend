@@ -27,7 +27,7 @@ const LendingFeed = () => {
       return;
     }
 
-    const lendRequesting = allLending.data.response.filter(
+    const lendRequesting = allLending.data.filter(
       ({ Record }) =>
         Record.status === "lendRequesting" || Record.status === "lendOffering"
     );
@@ -72,9 +72,9 @@ const LendingFeed = () => {
           <div className={classes.content}>
             <Container maxWidth="md">
               <Grid container spacing={4}>
-                {allLending.map(({ Record }, index) => (
+                {allLending.map(({ Record, imageUrl }, index) => (
                   <Grid key={index} item xs={12} sm={6} md={4}>
-                    <LendingCard record={Record} />
+                    <LendingCard record={{ ...Record, imageUrl }} />
                   </Grid>
                 ))}
               </Grid>

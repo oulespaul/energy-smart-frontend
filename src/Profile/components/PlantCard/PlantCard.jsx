@@ -33,10 +33,7 @@ const PlantCard = (props) => {
 
   return (
     <Card className={classes.plantCard}>
-      <CardMedia
-        image="https://source.unsplash.com/random"
-        className={classes.cardMedia}
-      />
+      <CardMedia image={plant.imageUrl} className={classes.cardMedia} />
 
       <CardContent>
         <Grid container justify="space-between">
@@ -53,7 +50,10 @@ const PlantCard = (props) => {
             size="small"
             className={classes.requestButton}
           >
-            <Link className={classes.link} to={`/app/lending-request/${plant.id}`}>
+            <Link
+              className={classes.link}
+              to={`/app/lending-request/${plant.id}`}
+            >
               <Autorenew />
             </Link>
           </IconButton>

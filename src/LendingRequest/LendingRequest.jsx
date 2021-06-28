@@ -73,7 +73,7 @@ const LendingRequest = () => {
           <Grid item md={4}>
             <Image
               onClick={() => console.log("onClick")}
-              src="https://source.unsplash.com/random"
+              src={plant.imageUrl}
               aspectRatio={4 / 3}
               style={{ borderRadius: "1rem" }}
               imageStyle={{ borderRadius: "1rem" }}

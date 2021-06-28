@@ -15,10 +15,7 @@ const LendingCard = (props) => {
 
   return (
     <Card className={classes.card}>
-      <CardMedia
-        image="https://source.unsplash.com/random"
-        className={classes.cardMedia}
-      />
+      <CardMedia image={record.imageUrl} className={classes.cardMedia} />
 
       <CardContent className={classes.cardContent}>
         <Typography variant="h5">
