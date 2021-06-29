@@ -30,9 +30,8 @@ const LendingFeed = () => {
       return;
     }
 
-    const lendRequesting = allLending.data.filter(
-      ({ Record }) =>
-        Record.status === "lendRequesting" || Record.status === "lendOffering"
+    const lendRequesting = allLending.data.filter(({ Record }) =>
+      ["lendRequesting", "lendOffering"].includes(Record.status)
     );
 
     setAllLending(lendRequesting);

@@ -51,7 +51,7 @@ const RequestLendingCard = (props) => {
       <CardActions className={classes.cardActions}>
         <Link to={`/app/lending-offer/${lending.request_id}`}>
           <Button size="small" variant="contained" color="primary">
-            ยื่นข้อเสนอ
+            ดูข้อเสนอ
           </Button>
         </Link>
       </CardActions>

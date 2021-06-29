@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
@@ -38,9 +39,11 @@ const LendingCard = (props) => {
       </CardContent>
 
       <CardActions className={classes.cardActions}>
-        <Button size="small" variant="contained" color="primary">
-          ยื่นข้อเสนอ
-        </Button>
+        <Link to={`/app/lending-offer/${record.request_id}`}>
+          <Button size="small" variant="contained" color="primary">
+            ยื่นข้อเสนอ
+          </Button>
+        </Link>
       </CardActions>
     </Card>
   );

@@ -31,7 +31,6 @@ const Profile = () => {
 
   useEffect(() => {
     fetchPlantInUser();
-    fetchAllLending();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -46,9 +45,10 @@ const Profile = () => {
     }
 
     setPlants(plantsInUser.data);
+    fetchAllLending(plantsInUser.data);
   };
 
-  const fetchAllLending = async () => {
+  const fetchAllLending = async (myPlants) => {
     const [allLending, error] = await handlePromise(getAllLendingRequest());
 
     if (error) {
@@ -58,13 +58,21 @@ const Profile = () => {
       });
     }
 
-    const lendRequesting = allLending.data.response.filter(
+    const allRequestLending = allLending.data.filter(
       ({ Record }) =>
-        Record.status === "lendRequesting" || Record.status === "lendOffering"
+        ["lendRequesting", "lendOffering"].includes(Record.status) &&
+        isInMyRequest(Record, myPlants) &&
+        Record.lending_offer.length
     );
 
-    setLending(lendRequesting);
+    setLending(allRequestLending);
     return setIsLoading(false);
+  };
+
+  const isInMyRequest = (lending, myPlants) => {
+    const plants = myPlants.map((plant) => plant.name);
+
+    return plants.includes(lending.request_plant_id);
   };
 
   const handleFormOpen = () => {
@@ -112,7 +120,7 @@ const Profile = () => {
 
           <div className={classes.listSection}>
             <Container maxWidth="lg">
-              <Typography variant="h5">รายการขอเช่าพลังงาน</Typography>
+              <Typography variant="h5">ข้อเสนอให้เช่าพลังงาน</Typography>
 
               <Paper className={classes.paper}>
                 {lending.map(({ Record }, index) => (
