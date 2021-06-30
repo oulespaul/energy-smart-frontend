@@ -7,7 +7,7 @@ import { LendingCard } from "./components/LendingCard";
 import { useStyles } from "./lendingFeed.styles";
 import { useEffect, useState } from "react";
 
-import getAllLendingRequest from "./apis/getAllLedingRequest";
+import getRentalFeed from "./apis/getRentalFeed";
 import handlePromise from "shared/handlePromise";
 import Loading from "shared/components/Loading";
 import _ from "lodash";
@@ -24,18 +24,14 @@ const LendingFeed = () => {
   }, []);
 
   const fetchAllLending = async () => {
-    const [allLending, error] = await handlePromise(getAllLendingRequest());
+    const [allLending, error] = await handlePromise(getRentalFeed());
 
     if (error) {
       return;
     }
 
-    const lendRequesting = allLending.data.filter(({ Record }) =>
-      ["lendRequesting", "lendOffering"].includes(Record.status)
-    );
-
-    setAllLending(lendRequesting);
-    setLendings(lendRequesting);
+    setAllLending(allLending.data);
+    setLendings(allLending.data);
 
     return setIsLoading(false);
   };

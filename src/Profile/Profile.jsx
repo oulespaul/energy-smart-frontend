@@ -18,7 +18,7 @@ import { useStyles } from "./profile.styles";
 import { Grid } from "@material-ui/core";
 import handlePromise from "shared/handlePromise";
 import getPlants from "./apis/getPlants";
-import getAllLendingRequest from "LendingFeed/apis/getAllLedingRequest";
+import getMyOffer from "./apis/getMyOffer";
 import { AlertType, useAlert } from "shared/context/alertContext";
 
 const Profile = () => {
@@ -31,6 +31,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchPlantInUser();
+    fetchAllLending();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -45,11 +46,10 @@ const Profile = () => {
     }
 
     setPlants(plantsInUser.data);
-    fetchAllLending(plantsInUser.data);
   };
 
-  const fetchAllLending = async (myPlants) => {
-    const [allLending, error] = await handlePromise(getAllLendingRequest());
+  const fetchAllLending = async () => {
+    const [allLending, error] = await handlePromise(getMyOffer());
 
     if (error) {
       return dispatch({
@@ -58,21 +58,8 @@ const Profile = () => {
       });
     }
 
-    const allRequestLending = allLending.data.filter(
-      ({ Record }) =>
-        ["lendRequesting", "lendOffering"].includes(Record.status) &&
-        isInMyRequest(Record, myPlants) &&
-        Record.lending_offer.length
-    );
-
-    setLending(allRequestLending);
+    setLending(allLending.data);
     return setIsLoading(false);
-  };
-
-  const isInMyRequest = (lending, myPlants) => {
-    const plants = myPlants.map((plant) => plant.name);
-
-    return plants.includes(lending.request_plant_id);
   };
 
   const handleFormOpen = () => {
