@@ -8,6 +8,7 @@ import { LendingFeed } from "./LendingFeed";
 import { LendingRequest } from "./LendingRequest";
 import { Profile } from "./Profile";
 import { LendingOffer } from "./LendingOffer";
+import { History } from "./History";
 
 import ProtectedRoute from "shared/components/ProtectedRoute";
 
@@ -37,6 +38,8 @@ const App = () => {
                 path="/app/lending-offer/:lendingId"
                 component={LendingOffer}
               />
+
+              <ProtectedRoute path="/app/history" component={History} />
             </Switch>
           </AppLayoutRoute>
         </Route>

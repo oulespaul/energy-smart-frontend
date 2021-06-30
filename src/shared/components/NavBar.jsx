@@ -100,7 +100,11 @@ const NavBar = () => {
                 </Link>
               </MenuItem>
 
-              <MenuItem onClick={handleClose}>ประวัติ</MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Link to="/app/history" className={classes.link}>
+                  ประวัติ
+                </Link>
+              </MenuItem>
 
               <MenuItem onClick={handleSignOut}>ออกจากระบบ</MenuItem>
             </Menu>

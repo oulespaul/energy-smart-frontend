@@ -56,7 +56,7 @@ const OfferDetailCard = (props) => {
 
     setOffer({
       ...offer,
-      [name]: Number(value),
+      [name]: name === "plantOfferId" ? value : Number(value),
     });
   };
 
@@ -127,7 +127,7 @@ const OfferDetailCard = (props) => {
                       label="เลือกโรงไฟฟ้า"
                     >
                       {plants.map((plant, index) => (
-                        <MenuItem value={plant.id} key={index}>
+                        <MenuItem value={plant.name} key={index}>
                           {plant.name}
                         </MenuItem>
                       ))}
