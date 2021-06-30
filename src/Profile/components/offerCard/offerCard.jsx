@@ -21,7 +21,15 @@ const useStyles = makeStyles(() => ({
 
 const OfferCard = (props) => {
   const classes = useStyles();
-  const { offer } = props;
+  const { offer, handleConfirm } = props;
+
+  const handleSubmit = () => {
+    handleConfirm({
+      confirmOfferId: offer.offer_id,
+      confirmCreditValue: offer.credit_value,
+      confirmOfferVolume: offer.offer_volume,
+    });
+  };
 
   return (
     <>
@@ -44,6 +52,7 @@ const OfferCard = (props) => {
           size="small"
           variant="contained"
           className={classes.confirmButton}
+          onClick={handleSubmit}
         >
           ยืนยันข้อเสนอนี้
         </Button>

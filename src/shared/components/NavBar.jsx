@@ -61,6 +61,7 @@ const NavBar = () => {
             style={{ width: "50px", margin: "8px" }}
             src="/images/SRAN_LOGO.png"
             alt="logo"
+            onClick={() => history.push("/app/feed")}
           />
 
           <Typography variant="body1" className={classes.title}>

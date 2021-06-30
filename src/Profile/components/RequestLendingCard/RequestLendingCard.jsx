@@ -13,6 +13,10 @@ import { OfferCard } from "../offerCard";
 import { makeStyles } from "@material-ui/core/styles";
 
 import convertTimestampToDatetime from "shared/convertTimestampToDatetime";
+import handlePromise from "shared/handlePromise";
+import patchConfirmOffer from "../../apis/patchCreateOfferConfirm";
+import { AlertType, useAlert } from "shared/context/alertContext";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -32,6 +36,28 @@ const RequestLendingCard = (props) => {
   const classes = useStyles();
   const { lending } = props;
   const [expanded, setExpanded] = useState(false);
+  const { dispatch } = useAlert();
+  const history = useHistory();
+
+  const handleConfirmOffer = async (offer) => {
+    const [, error] = await handlePromise(
+      patchConfirmOffer(lending.request_id, offer)
+    );
+
+    if (error) {
+      return dispatch({
+        type: AlertType.ERROR,
+        payload: { message: "การยืนยันรายการไม่สำเร็จ" },
+      });
+    }
+
+    dispatch({
+      type: AlertType.SUCCESS,
+      payload: { message: "การยืนยันรายการสำเร็จ" },
+    });
+
+    return history.goBack();
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -70,8 +96,12 @@ const RequestLendingCard = (props) => {
       <Divider />
 
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        {lending.lending_offer.map((offer) => (
-          <OfferCard offer={offer} />
+        {lending.lending_offer.map((offer, index) => (
+          <OfferCard
+            offer={offer}
+            handleConfirm={handleConfirmOffer}
+            key={index}
+          />
         ))}
       </Collapse>
     </Card>

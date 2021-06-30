@@ -42,7 +42,7 @@ const PlantCard = (props) => {
           </Typography>
 
           <Typography variant="overline">
-            ความจุไฟฟ้า: {plant.volume_balance}
+            ความจุไฟฟ้า: {plant.volumeBalance} MW
           </Typography>
 
           <IconButton

@@ -40,8 +40,8 @@ export const useStyles = makeStyles(() => ({
 
 const RequestDetailCard = (props) => {
   const classes = useStyles();
-  const { handleValue, handleSubmit } = props;
-  const [value, setValue] = useState(30);
+  const { handleValue, handleSubmit, plant } = props;
+  const [value, setValue] = useState(0);
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
@@ -85,10 +85,10 @@ const RequestDetailCard = (props) => {
                 value={typeof value === "number" ? value : 0}
                 aria-labelledby="discrete-slider"
                 valueLabelDisplay="auto"
-                step={10}
+                step={100}
                 marks
-                min={10}
-                max={110}
+                min={plant.volumeBalance / 10}
+                max={plant.volumeBalance}
                 onChange={handleSliderChange}
               />
             </div>

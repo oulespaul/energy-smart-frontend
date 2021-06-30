@@ -123,9 +123,15 @@ const Profile = () => {
               <Typography variant="h5">ข้อเสนอให้เช่าพลังงาน</Typography>
 
               <Paper className={classes.paper}>
-                {lending.map(({ Record }, index) => (
-                  <RequestLendingCard lending={Record} key={index} />
-                ))}
+                {lending.length ? (
+                  lending.map(({ Record }, index) => (
+                    <RequestLendingCard lending={Record} key={index} />
+                  ))
+                ) : (
+                  <Card className={classes.emptyOfferCard}>
+                    ยังไม่พบข้อเสนอ
+                  </Card>
+                )}
               </Paper>
             </Container>
           </div>

@@ -57,7 +57,7 @@ const LendingFeed = () => {
     );
 
     return setLendings(lendingSearching);
-  }, 2000);
+  }, 1000);
 
   return (
     <>

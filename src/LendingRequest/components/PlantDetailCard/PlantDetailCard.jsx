@@ -34,7 +34,7 @@ const PlantDetailCard = (props) => {
         </Typography>
 
         <Typography variant="body1">
-          ความจุโรงไฟฟ้า: {plant.volume_balance}
+          ความจุโรงไฟฟ้า: {plant.volumeBalance} MW
         </Typography>
       </CardContent>
     </Card>

@@ -88,6 +88,7 @@ const LendingRequest = () => {
             <RequestDetailCard
               handleValue={setVolume}
               handleSubmit={handleSubmit}
+              plant={plant}
             />
           </Grid>
         </Grid>

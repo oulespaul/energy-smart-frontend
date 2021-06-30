@@ -23,4 +23,10 @@ export const useStyles = makeStyles(() => ({
   listSection: {
     paddingBottom: "16px",
   },
+  emptyOfferCard: {
+    padding: "16px",
+    textAlign: "center",
+    fontSize: "20px",
+    color: "red",
+  },
 }));
