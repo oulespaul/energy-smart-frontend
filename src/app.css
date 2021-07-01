@@ -1,0 +1,17 @@
+@font-face {
+  font-family: "Kanit";
+  src: local("Kanit"), url(./fonts/Kanit-Light.ttf) format("truetype");
+}
+
+body {
+  font-family: "Kanit", sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #faf7f3;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
