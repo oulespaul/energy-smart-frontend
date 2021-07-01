@@ -4,17 +4,18 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
 import CompareArrowsIcon from "@material-ui/icons/CompareArrows";
 
 import { makeStyles } from "@material-ui/core/styles";
+import {
+  ValidatorForm,
+  TextValidator,
+  SelectValidator,
+} from "react-material-ui-form-validator";
 
 export const useStyles = makeStyles(() => ({
   cardRequestDetail: {
@@ -46,8 +47,8 @@ const OfferDetailCard = (props) => {
   const { handleSubmitOffer, lendingRequest, plants } = props;
   const [offer, setOffer] = useState({
     lendingTransactionId: lendingRequest.request_id,
-    offerVolume: 0,
-    offerCredit: 0,
+    offerVolume: "",
+    offerCredit: "",
     plantOfferId: "",
   });
 
@@ -102,91 +103,86 @@ const OfferDetailCard = (props) => {
         <CompareArrowsIcon style={{ fontSize: "5.188rem" }} />
 
         <Grid item md={6}>
-          <Card className={classes.cardRequestDetail}>
-            <CardContent>
-              <Grid container spacing={4}>
-                <Grid item md={12}>
-                  <Typography variant="h5">รายละเอียดข้อเสนอ</Typography>
-                </Grid>
+          <ValidatorForm onSubmit={handleSubmit}>
+            <Card className={classes.cardRequestDetail}>
+              <CardContent>
+                <Grid container spacing={4}>
+                  <Grid item md={12}>
+                    <Typography variant="h5">รายละเอียดข้อเสนอ</Typography>
+                  </Grid>
 
-                <Grid item>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      เลือกโรงไฟฟ้า
-                    </InputLabel>
-
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
+                  <Grid item>
+                    <SelectValidator
+                      variant="outlined"
+                      style={{ width: "200px" }}
                       value={offer.plantOfferId}
                       onChange={handleInputChange}
                       name="plantOfferId"
                       label="เลือกโรงไฟฟ้า"
+                      validators={["required"]}
+                      errorMessages={["กรุณาเลือกโรงไฟฟ้า"]}
                     >
                       {plants.map((plant, index) => (
                         <MenuItem value={plant.name} key={index}>
                           {plant.name}
                         </MenuItem>
                       ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                <Grid item container justify="space-evenly">
-                  <Grid item>
-                    <Typography>ปริมาณไฟฟ้าที่เสนอให้ยืม</Typography>
-
-                    <TextField
-                      id="filled-basic"
-                      size="medium"
-                      variant="filled"
-                      value={offer.offerVolume}
-                      style={{ textAlign: "center" }}
-                      onChange={handleInputChange}
-                      name="offerVolume"
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">MW</InputAdornment>
-                        ),
-                      }}
-                    />
+                    </SelectValidator>
                   </Grid>
 
-                  <Grid item>
-                    <Typography>มุลค่าเครดิตที่เสนอให้ยืม</Typography>
+                  <Grid item container justify="space-evenly">
+                    <Grid item>
+                      <Typography>ปริมาณไฟฟ้าที่เสนอให้ยืม</Typography>
 
-                    <TextField
-                      id="filled-basic"
-                      size="medium"
-                      variant="filled"
-                      value={offer.offerCredit}
-                      style={{ textAlign: "center" }}
-                      onChange={handleInputChange}
-                      name="offerCredit"
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">Credit</InputAdornment>
-                        ),
-                      }}
-                    />
+                      <TextValidator
+                        onChange={handleInputChange}
+                        name="offerVolume"
+                        value={offer.offerVolume}
+                        variant="filled"
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">MW</InputAdornment>
+                          ),
+                        }}
+                        validators={["required"]}
+                        errorMessages={["กรุณากรอกปริมาณไฟฟ้า"]}
+                      />
+                    </Grid>
+
+                    <Grid item>
+                      <Typography>มุลค่าเครดิตที่เสนอให้ยืม</Typography>
+
+                      <TextValidator
+                        onChange={handleInputChange}
+                        name="offerCredit"
+                        value={offer.offerCredit}
+                        variant="filled"
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              Credit
+                            </InputAdornment>
+                          ),
+                        }}
+                        validators={["required"]}
+                        errorMessages={["กรุณากรอกจำนวนเครดิต"]}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </CardContent>
+              </CardContent>
 
-            <CardActions className={classes.cardActions}>
-              <Button
-                variant="contained"
-                className={classes.requestSubmit}
-                onClick={handleSubmit}
-              >
-                ยื่นข้อเสนอ
-              </Button>
-            </CardActions>
-          </Card>
+              <CardActions className={classes.cardActions}>
+                <Button
+                  variant="contained"
+                  className={classes.requestSubmit}
+                  type="submit"
+                >
+                  ยื่นข้อเสนอ
+                </Button>
+              </CardActions>
+            </Card>
+          </ValidatorForm>
         </Grid>
       </Grid>
     </>
