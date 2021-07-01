@@ -2,12 +2,12 @@ import { useState } from "react";
 import { AlertType, useAlert } from "shared/context/alertContext";
 
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 
 import handlePromise from "shared/handlePromise";
@@ -17,6 +17,7 @@ import postUploadPlantImage from "Profile/apis/postUploadPlantImage";
 import Fab from "@material-ui/core/Fab";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import { useStyles } from "./formDialog.styles";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
 export default function FormDialog(props) {
   const classes = useStyles();
@@ -24,7 +25,7 @@ export default function FormDialog(props) {
   const initPlant = {
     name: "",
     address: "",
-    volumeBalance: 0,
+    volumeBalance: "",
   };
   const [plant, setPlant] = useState(initPlant);
   const [plantImage, setPlantImage] = useState({ file: 0, imageUrl: "" });
@@ -39,7 +40,15 @@ export default function FormDialog(props) {
   };
 
   const handleSubmit = async () => {
+    if (!plantImage.file) {
+      return dispatch({
+        type: AlertType.ERROR,
+        payload: { message: "กรุณาอัพโหลดรูปภาพ" },
+      });
+    }
+
     const [plantRes, error] = await handlePromise(postCreatePlant(plant));
+
     if (error) {
       dispatch({
         type: AlertType.ERROR,
@@ -64,6 +73,7 @@ export default function FormDialog(props) {
       type: AlertType.SUCCESS,
       payload: { message: "สร้างโรงไฟฟ้าสำเร็จ" },
     });
+
     return handleClear();
   };
 
@@ -91,87 +101,101 @@ export default function FormDialog(props) {
       <Dialog
         open={isOpen}
         onClose={handleClose}
+        fullWidth
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">เพิ่มโรงงานไฟฟ้า</DialogTitle>
+        <ValidatorForm onSubmit={handleSubmit}>
+          <DialogTitle id="form-dialog-title">เพิ่มโรงงานไฟฟ้า</DialogTitle>
 
-        <DialogContent>
-          {plantImage.imageUrl ? (
-            <Grid container justify="center">
-              <img
-                width="100%"
-                className={classes.media}
-                alt="plant"
-                src={plantImage.imageUrl}
-              />
-            </Grid>
-          ) : (
-            <>
-              <input
-                accept="image/*"
-                className={classes.input}
-                id="contained-button-file"
-                multiple
-                type="file"
-                onChange={handleUploadClick}
-              />
-              <label htmlFor="contained-button-file">
-                <Fab component="span" className={classes.button}>
-                  <AddPhotoAlternateIcon />
-                </Fab>
-              </label>
-            </>
-          )}
+          <DialogContent>
+            {plantImage.imageUrl ? (
+              <Grid container justify="center">
+                <img
+                  width="100%"
+                  className={classes.media}
+                  alt="plant"
+                  src={plantImage.imageUrl}
+                />
+              </Grid>
+            ) : (
+              <>
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  id="contained-button-file"
+                  multiple
+                  type="file"
+                  onChange={handleUploadClick}
+                />
+                <label htmlFor="contained-button-file">
+                  <Fab component="span" className={classes.button}>
+                    <AddPhotoAlternateIcon />
+                  </Fab>
+                </label>
 
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            name="name"
-            label="ชื่อ"
-            onChange={handleOnChange}
-            value={plant.name}
-            type="name"
-            fullWidth
-          />
+                <Typography variant="caption">
+                  *ไฟล์ต้องเป็น .jpg, .png เท่านั้น
+                </Typography>
+              </>
+            )}
 
-          <TextField
-            autoFocus
-            margin="dense"
-            id="address"
-            name="address"
-            label="ที่อยู่"
-            onChange={handleOnChange}
-            value={plant.address}
-            type="text"
-            fullWidth
-          />
+            <TextValidator
+              autoFocus
+              margin="dense"
+              id="name"
+              name="name"
+              label="ชื่อ"
+              onChange={handleOnChange}
+              value={plant.name}
+              type="name"
+              fullWidth
+              validators={["required"]}
+              errorMessages={["กรุณากรอกชื่อโรงงานไฟฟ้า"]}
+            />
 
-          <TextField
-            autoFocus
-            margin="dense"
-            id="volumeBalance"
-            name="volumeBalance"
-            label="ความจุไฟฟ้าในโรงงาน"
-            onChange={handleOnChange}
-            value={plant.volumeBalance}
-            InputProps={{
-              endAdornment: <InputAdornment position="end">MW</InputAdornment>,
-            }}
-            type="number"
-            fullWidth
-          />
-        </DialogContent>
+            <TextValidator
+              autoFocus
+              margin="dense"
+              id="address"
+              name="address"
+              label="ที่อยู่"
+              onChange={handleOnChange}
+              value={plant.address}
+              type="text"
+              fullWidth
+              validators={["required"]}
+              errorMessages={["กรุณากรอกที่อยู่โรงงานไฟฟ้า"]}
+            />
 
-        <DialogActions>
-          <Button onClick={handleClear} color="primary">
-            ยกเลิก
-          </Button>
+            <TextValidator
+              autoFocus
+              margin="dense"
+              id="volumeBalance"
+              name="volumeBalance"
+              label="ความจุไฟฟ้าในโรงงาน"
+              onChange={handleOnChange}
+              value={plant.volumeBalance}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">MW</InputAdornment>
+                ),
+              }}
+              fullWidth
+              validators={["required"]}
+              errorMessages={["กรุณากรอกความจุโรงงานไฟฟ้า"]}
+            />
+          </DialogContent>
 
-          <Button onClick={handleSubmit} color="primary">
-            เพิ่ม
-          </Button>
-        </DialogActions>
+          <DialogActions>
+            <Button onClick={handleClear} color="primary">
+              ยกเลิก
+            </Button>
+
+            <Button type="submit" color="primary">
+              เพิ่ม
+            </Button>
+          </DialogActions>
+        </ValidatorForm>
       </Dialog>
     </div>
   );
